@@ -1,0 +1,136 @@
+
+#step 1 create a signed tx using the signed tx script
+tx1=$(~/bitcoin_tools/tools/create_signed_tx_with_index.sh $recip 0)
+
+#have a look at this transaction
+./get_decoded_tx.sh $tx1
+{
+  "txid": "760fb7fba9ba581c5ab6068f2e60b59c0024f9f22ba67553186ba0bd7c204fb4",
+  "hash": "760fb7fba9ba581c5ab6068f2e60b59c0024f9f22ba67553186ba0bd7c204fb4",
+  "version": 2,
+  "size": 224,
+  "vsize": 224,
+  "locktime": 0,
+  "vin": [
+    {
+      "txid": "b6866036d4a3d8c1567f4817f04a25842cda7e0187c22f8eb7e0d27a262c5602",
+      "vout": 0,
+      "scriptSig": {
+        "asm": "3045022100d70e1f757951b53d56a448b66c0476ac2deb5d7ea0df79e208ce3c935256a974022002691ff44127ed18752f8a05dfcb131e8029928badf8e2a160e2c23dfdc6b636[ALL] 027d9571a56b5fb08004c1a6c2bc0b8211808903549b289155b4f8302e9acfd07d",
+        "hex": "483045022100d70e1f757951b53d56a448b66c0476ac2deb5d7ea0df79e208ce3c935256a974022002691ff44127ed18752f8a05dfcb131e8029928badf8e2a160e2c23dfdc6b6360121027d9571a56b5fb08004c1a6c2bc0b8211808903549b289155b4f8302e9acfd07d"
+      },
+      "sequence": 4294967295
+    }
+  ],
+  "vout": [
+    {
+      "value": 0.65000000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "OP_HASH160 a9974100aeee974a20cda9a2f545704a0ab54fdc OP_EQUAL",
+        "hex": "a914a9974100aeee974a20cda9a2f545704a0ab54fdc87",
+        "reqSigs": 1,
+        "type": "scripthash",
+        "addresses": [
+          "2N8hwP1WmJrFF5QWABn38y63uYLhnJYJYTF"
+        ]
+      }
+    }, 
+    {
+      "value": 0.64800000,
+      "n": 1,
+      "scriptPubKey": {
+        "asm": "OP_DUP OP_HASH160 77715cd12894eb13dc5f9a413809a7e06740d71f OP_EQUALVERIFY OP_CHECKSIG",
+        "hex": "76a91477715cd12894eb13dc5f9a413809a7e06740d71f88ac",
+        "reqSigs": 1,
+        "type": "pubkeyhash",
+        "addresses": [
+          "mrQWWT7aQU37ntN3DiCQ87RPnGb5zh2bXe"
+        ]
+      }
+    }
+  ]
+}
+
+#Once we receive the change (0.64800) back to our wallet. after confirmation this should become a new
+#unspent output utxo 
+bitcoin-cli listunspent
+#this particular one is at index 1 (the second since first index is 0)
+
+ {
+    "txid": "760fb7fba9ba581c5ab6068f2e60b59c0024f9f22ba67553186ba0bd7c204fb4",
+    "vout": 1,
+    "address": "mrQWWT7aQU37ntN3DiCQ87RPnGb5zh2bXe",
+    "scriptPubKey": "76a91477715cd12894eb13dc5f9a413809a7e06740d71f88ac",
+    "amount": 0.64800000,
+    "confirmations": 100,
+    "spendable": true,
+    "solvable": true,
+    "safe": true
+  }, 
+
+#now create another signed transaction for this unspent utxo
+tx2=$(~/bitcoin_tools/tools/create_signed_tx_with_index.sh $recip 1)
+
+#decode this with get_decoded.sh we get 
+
+
+{
+  "txid": "3bfac9887aa574962301fde662576f8ea1fe01be4ed0ddda4843df14c5f29396",
+  "hash": "3bfac9887aa574962301fde662576f8ea1fe01be4ed0ddda4843df14c5f29396",
+  "version": 2,
+  "size": 224,
+  "vsize": 224,
+  "locktime": 0,
+  "vin": [
+    {
+      "txid": "760fb7fba9ba581c5ab6068f2e60b59c0024f9f22ba67553186ba0bd7c204fb4",
+      "vout": 1,
+      "scriptSig": {
+        "asm": "304502210097fc58f3322c3e9d58fc113bc09cd57b6e50a6d158c9d74a86a6f80092295e3002200361f77d97c21b79d82e86b3420896dd6bdd0a5c069617fd2af16b66a1bd1168[ALL] 02781e1eafe689391c2e37ad1165482e2b5455f0be09b5ad6ca2f21fdcc92a8fbf",
+        "hex": "48304502210097fc58f3322c3e9d58fc113bc09cd57b6e50a6d158c9d74a86a6f80092295e3002200361f77d97c21b79d82e86b3420896dd6bdd0a5c069617fd2af16b66a1bd1168012102781e1eafe689391c2e37ad1165482e2b5455f0be09b5ad6ca2f21fdcc92a8fbf"
+      },
+      "sequence": 4294967295
+    }
+  ],
+  "vout": [
+    {
+      "value": 0.32400000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "OP_HASH160 a9974100aeee974a20cda9a2f545704a0ab54fdc OP_EQUAL",
+        "hex": "a914a9974100aeee974a20cda9a2f545704a0ab54fdc87",
+        "reqSigs": 1,
+        "type": "scripthash",
+        "addresses": [
+          "2N8hwP1WmJrFF5QWABn38y63uYLhnJYJYTF"
+        ]
+      }
+    }, 
+    {
+      "value": 0.32200000,
+      "n": 1,
+      "scriptPubKey": {
+        "asm": "OP_DUP OP_HASH160 776554d16b3e18ea31c9ecf1d438a28e2bfe4979 OP_EQUALVERIFY OP_CHECKSIG",
+        "hex": "76a914776554d16b3e18ea31c9ecf1d438a28e2bfe497988ac",
+        "reqSigs": 1,
+        "type": "pubkeyhash",
+        "addresses": [
+          "mrQG6WGUq9EqVVpASguXjhV25YJX2AHP4D"
+        ]
+      }
+    }
+  ]
+}
+
+here we are sending 0.324 to testnet and getting 0.3220 back after the change is taken off.
+now send this to the faucet 
+
+so append the raw tx of current transaction with the previous tx scriptPubKey and then append the current decoded tx asm scriptSig (asm) make sure to add 01 and leave space between
+
+
+btcdeb tx=0.648:0200000001b44f207cbda06b185375a62bf2f924009cb5602e8f06b65a1c58baa9fbb70f76010000006b48304502210097fc58f3322c3e9d58fc113bc09cd57b6e50a6d158c9d74a86a6f80092295e3002200361f77d97c21b79d82e86b3420896dd6bdd0a5c069617fd2af16b66a1bd1168012102781e1eafe689391c2e37ad1165482e2b5455f0be09b5ad6ca2f21fdcc92a8fbfffffffff028062ee010000000017a914a9974100aeee974a20cda9a2f545704a0ab54fdc874055eb01000000001976a914776554d16b3e18ea31c9ecf1d438a28e2bfe497988ac00000000 76a91477715cd12894eb13dc5f9a413809a7e06740d71f88ac 304502210097fc58f3322c3e9d58fc113bc09cd57b6e50a6d158c9d74a86a6f80092295e3002200361f77d97c21b79d82e86b3420896dd6bdd0a5c069617fd2af16b66a1bd116801 02781e1eafe689391c2e37ad1165482e2b5455f0be09b5ad6ca2f21fdcc92a8fbf
+
+
+
+
